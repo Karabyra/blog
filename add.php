@@ -1,23 +1,29 @@
 <?php
 
-	include_once('functions.php');
+	include_once('model/messages.php');
 	include_once('model/logs.php');
 
+$tags = getArticles($sqlTags);
 
 $ip = $_SERVER['REMOTE_ADDR'];
 $uri = $_SERVER["REQUEST_URI"];
 $isSend = false;
 $err = '';
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $title = trim($_POST['title']);
-    $content = trim($_POST['content']);
-    addArticle($title,$content);
+$sql = "INSERT articles (id_tegs ,title, content)VALUES(:tgs, :ttl ,:cntnt)";
+$params = ['ttl' => '', 'cntnt' => '', 'tgs' => '' ];
 
-    if($title === '' || $content === ''){
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+   $params['ttl'] = trim($_POST['title']);
+   $params['cntnt'] = trim($_POST['content']);
+    $params['tgs'] = (int)$_POST['tags'];
+
+    addRequest($sql,$params);
+
+    if($params['ttl'] === '' || $params['cntnt'] === ''){
         $err = 'Заполните все поля!';
         addLogs($ip,$uri,$err);
     }
-    else if(mb_strlen($title, 'UTF8') < 2){
+    else if(mb_strlen($params['ttl'], 'UTF8') < 2 || mb_strlen($params['cntnt'], 'UTF8') < 2){
         $err = 'Имя не короче 2 символов!';
         addLogs($ip,$uri,$err);
     }
@@ -26,25 +32,29 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         addLogs($ip,$uri,$err);
     }
 }
-else{
-    $title = '';
-    $content = '';
-}
 
 ?>
 <div class="form">
-    <? if($isSend): ?>
+    <?php if($isSend): ?>
         <p>Your app is done!</p>
-    <? else: ?>
+    <?php else: ?>
         <form method="post">
             Title:<br>
-            <input type="text" name="title" value="<?=$title?>"><br>
+            <input type="text" name="title" value="<?=$params['ttl']?>"><br>
+            Tags:<br>
+            <select name="tags">
+                <?php foreach ($tags as $tag):?>
+                <option value="<?=$tag['id_tegs']?>">
+                    <?=$tag['tegs']?>
+                </option>
+               <?php endforeach;?>
+            </select><br>
             Content:<br>
             <textarea name="content" style="width: 300px;height: 70px"></textarea><br>
             <button>Send</button>
             <p><?=$err?></p>
         </form>
-    <? endif; ?>
+    <?php endif; ?>
 </div>
 <hr>
 <a href="index.php">Move to main page</a>

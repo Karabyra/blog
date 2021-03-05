@@ -1,49 +1,45 @@
 <?php
-include_once('functions.php');
+include_once('model/messages.php');
 
 
 
 $isSend = false;
 $err = '';
 $id = $_GET['id'];
-$article = getArticles();
+$sqlGetArticle = "SELECT * FROM  articles WHERE id_article = $id";
+$article =  getArticles($sqlGetArticle);
 
+$params = ['ttl' => '', 'cntnt' => ''];
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $title = trim($_POST['title']);
-    $content = trim($_POST['content']);
-    editArticle($title,$content,$id);
-
-    if($title === '' || $content === ''){
+    $params['ttl'] = trim($_POST['title']);
+    $params['cntnt'] = trim($_POST['content']);
+    var_dump($params);
+    $sqlUpdateArticle = "UPDATE articles SET title = :ttl,content = :cntnt WHERE id_article = $id ";
+    addRequest($sqlUpdateArticle,$params);
+    $isSend = true;
+    if($params['ttl'] === '' || $params['cntnt'] === ''){
         $err = 'Заполните все поля!';
     }
-    else if(mb_strlen($title, 'UTF8') < 2){
+    else if(mb_strlen($params['ttl'], 'UTF8') < 2 || mb_strlen($params['cntnt'], 'UTF8') < 2){
         $err = 'Имя не короче 2 символов!';
     }
-    else{
-        $dt = date("Y-d-m H:i:s");
-        $isSend = true;
-    }
-}
-else{
-    $title = $article[$id]['title'];
-    $content = $article[$id]['content'];
 }
 
 ?>
 <div class="form">
-    <? if($isSend): ?>
+    <?php if($isSend): ?>
         <p>Your massage edit!</p>
-    <? else: ?>
+    <?php else: ?>
         <form method="post">
             Title:<br>
-            <input type="text" name="title" value="<?=$title?>"><br>
+            <input type="text" name="title" value="<?=$article[0]['title']?>"><br>
             Content:<br>
-            <textarea name="content" style="width: 300px;height: 70px"><?=$content?></textarea><br>
+            <textarea name="content" style="width: 500px;height: 100px"><?=$article[0]['content']?></textarea><br>
             <button>Send</button>
             <p><?=$err?></p>
         </form>
-    <? endif; ?>
+    <?php endif; ?>
 </div>
 <hr>
 <a href="index.php">Move to main page</a>

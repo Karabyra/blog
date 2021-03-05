@@ -1,7 +1,7 @@
 <?php
 
 function getLogs(){
-    $lines = file('logs/logs.txt');
+    $lines = file('db/logs/logs.txt');
     $logs = [];
 
     foreach ($lines as $line){
@@ -18,12 +18,22 @@ function strToArr($str){
 
 }
 
-function addLogs($ip,$uri,$err){
-    $dt  = date("Y-b-m H:i:s");
-    $logs = "$dt;$ip;$uri;$err\n";
-    file_put_contents('logs/logs.txt',$logs,FILE_APPEND);
-    return true;
+function addLogs(int $ip,string $uri,string $err =''){
+    try{
+        $dt  = date("Y-d-m H:i:s");
+        $logContent = "{$dt};{$ip};{$uri};{$err};";
+        $logContent .= PHP_EOL;
+
+        $logFilePath = 'db/logs/logs.txt';
+        $logFile = fopen($logFilePath,'a+');
+        fwrite($logFile,$logContent);
+        fclose($logFile);
+    } catch (\Exception $e){
+        return false;
+    }
+    return  true;
 }
+
 
 
 
