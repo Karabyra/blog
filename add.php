@@ -3,7 +3,7 @@
 	include_once('model/messages.php');
 	include_once('model/logs.php');
 
-$tags = getArticles($sqlTags);
+$tags = getTegs();
 
 $ip = $_SERVER['REMOTE_ADDR'];
 $uri = $_SERVER["REQUEST_URI"];

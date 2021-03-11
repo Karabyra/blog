@@ -1,7 +1,7 @@
 <?php
 include_once ('model/messages.php');
 
-	$articles = getArticles($sqlAllArticles);
+	$articles = getAllarticles();
 ?>
 <a href="add.php">Add articles</a>
 <hr>

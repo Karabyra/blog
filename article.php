@@ -1,11 +1,14 @@
 <?php
 
 	include_once('model/messages.php');
-	$id = (int)($_GET['id'] ?? '');
-    $sqlGetArticle = "SELECT * FROM  articles WHERE id_article = $id";
-	$articles = getArticles($sqlGetArticle,false);
-	$post = $articles ?? null;
-	$hasPost = ($post !== null);
+	$id = $_GET['id'] ?? '';
+    $checkOutID = checkID($id);
+    $hasPost ='';
+    if($_SERVER['REQUEST_URI'] === "/article.php?id=$checkOutID"){
+        $articles =  getOneArticles($checkOutID);
+        $post = $articles ?? null;
+        $hasPost = ($post !== null);
+    }
 ?>
 <div class="content">
 	<?php if($hasPost): ?>
@@ -14,8 +17,8 @@
 			<div><?=$post['content']?></div>
 			<div><?=$post['article_dt']?></div>
 			<hr>
-			<a href="delete.php?id=<?=$id?>">Remove</a><br>
-			<a href="edit.php?id=<?=$id?>">Edit</a>
+			<a href="delete.php?id=<?=$checkOutID?>">Remove</a><br>
+			<a href="edit.php?id=<?=$checkOutID?>">Edit</a>
 		</div>
 	<?php else: ?>
 		<div class="e404">

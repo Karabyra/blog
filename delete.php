@@ -6,11 +6,9 @@
 $ip = $_SERVER['REMOTE_ADDR'];
 $uri = $_SERVER["REQUEST_URI"];
 
-$getId = $_GET['id'];
-
-$sql = "DELETE FROM `articles` WHERE `articles`.`id_article` = $getId ";
-var_dump($sql);
-addRequest($sql);
+$id = $_GET['id'];
+$checkOutID = checkID($id);
+deleteArticle($checkOutID);
 $err = '';
 addLogs($ip,$uri,$err);
 
