@@ -70,7 +70,7 @@ function paramsValidate(array $params):array
     $id = checkID($_GET['id']);
 
     if ($_SERVER['REQUEST_URI'] !== "/edit.php?id=$id" && $_SERVER['REQUEST_URI'] !== "/add.php") {
-        $err[] = 'Ошибка Id адресса';
+        $err['404'] = 'Ошибка Id адресса';
     }
     else if ($params['ttl'] === '' || $params['cntnt'] === '') {
         $err[] = 'Заполните все поля!';

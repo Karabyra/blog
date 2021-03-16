@@ -9,4 +9,10 @@ if ($_SERVER['REQUEST_URI'] === "/article.php?id=$checkOutID") {
     $post = $articles ?? null;
     $hasPost = ($post !== null);
 }
-include('view/v_article.php');
+if($hasPost) {
+    include('view/v_article.php');
+}
+else{
+    header('HTTP/1.1 Not Found');
+    include ('view/v_404.php');
+}

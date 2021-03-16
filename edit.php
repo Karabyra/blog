@@ -4,7 +4,6 @@ include_once('model/messages.php');
 
 $isSend = false;
 $id = checkID($_GET['id']);
-var_dump($id);
 $article = getOneArticles($id);
 $params = ['ttl' => '', 'cntnt' => ''];
 
@@ -20,4 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     $errArray = [];
 }
-include('view/v_edit.php');
+if($errArray['404']){
+    include('view/v_404.php');
+}
+else {
+    header('HTTP/1.1 Not Found');
+    include('view/v_edit.php');
+}
