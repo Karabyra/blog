@@ -64,18 +64,24 @@ function checkID($id)
     return $checkOutID;
 }
 
-function paramsValidate(array $params):array
+function paramsValidate(array $params): array
 {
     $err = [];
     $id = checkID($_GET['id']);
 
-    if ($_SERVER['REQUEST_URI'] !== "/edit.php?id=$id" && $_SERVER['REQUEST_URI'] !== "/add.php") {
+    if ($_SERVER['REQUEST_URI'] !== "/index.php/index.php?c=edit&id=$id"
+        && $_SERVER['REQUEST_URI'] !== "/index.php/index.php?c=add") {
         $err['404'] = 'Ошибка Id адресса';
-    }
-    else if ($params['ttl'] === '' || $params['cntnt'] === '') {
+    } else if ($params['ttl'] === '' || $params['cntnt'] === '') {
         $err[] = 'Заполните все поля!';
     } else if (mb_strlen($params['ttl'], 'UTF8') < 2 || mb_strlen($params['cntnt'], 'UTF8') < 2) {
         $err[] = 'текст не короче 2 символов!';
     }
     return $err;
+}
+function paramsSpecialChars(array $params):array
+{
+    $params['ttl'] = htmlspecialchars($params['ttl']);
+    $params['cntnt'] = htmlspecialchars($params['cntnt']);
+    return $params;
 }

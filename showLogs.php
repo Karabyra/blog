@@ -19,4 +19,4 @@ $hasPost = ($logs !== null);
         </div>
     <?php endif; ?>
 </div>
-<a href="admin.php">admin</a>
+<a href="controllers/admin.php">admin</a>

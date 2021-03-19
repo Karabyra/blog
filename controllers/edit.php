@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $params['ttl'] = trim($_POST['title']);
     $params['cntnt'] = trim($_POST['content']);
     $params['cid'] = (int)$id;
+    $params = paramsSpecialChars($params);
     $errArray = paramsValidate($params);
     if (empty($errArray)) {
         sqlUpdateArticle($id, $params);

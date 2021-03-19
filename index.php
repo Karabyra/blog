@@ -1,15 +1,13 @@
 <?php
-include_once('model/messages.php');
+include_once('core/route.php');
 
-$articles = getAllarticles();
-?>
-<a href="add.php">Add articles</a>
-<hr>
-<div class="articles">
-    <?php foreach ($articles as $id => $article): ?>
-        <div class="article">
-            <h2><?= $article['title'] ?></h2>
-            <a href="article.php?id=<?= $article['id_article'] ?>">Read more</a>
-        </div>
-    <?php endforeach; ?>
-</div>
+$cname = $_GET['c'] ?? 'index';
+$path = "controllers/{$cname}.php";
+
+if (validateAddressController($cname) && file_exists($path)) {
+    include_once($path);
+} else {
+    header('HTTP/1.1 Not Found');
+    include('view/v_404.php');
+}
+

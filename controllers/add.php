@@ -14,13 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $params['ttl'] = trim($_POST['title']);
     $params['cntnt'] = trim($_POST['content']);
     $params['tgs'] = (int)$_POST['tags'];
+    $params = paramsSpecialChars($params);
     $errArray = paramsValidate($params);
     if (empty($errArray)) {
         addRequest($params);
         $isSend = true;
     }
+
 } else {
     $errArray = [];
+
 }
 
 include('view/v_add.php');
